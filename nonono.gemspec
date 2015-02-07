@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
     "Gemfile",
     "nonono.gemspec",
   ]
-  gem.test_files    = Dir.glob("test/**/*")
+  gem.test_files    = Dir.glob("spec/**/*")
 
   gem.version       = Nonono::VERSION
   gem.platform      = Gem::Platform::RUBY
