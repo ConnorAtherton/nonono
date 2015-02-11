@@ -1,1 +1,2 @@
-command: one
+help:
+  message: "Git help just shows you git commands, nothing to worry about :)"
