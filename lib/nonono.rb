@@ -14,14 +14,20 @@ module Nonono
 
       if last_git_command.nil?
         puts "You haven't issued a git command in a while.. Nothing to undo"
+        return
       end
 
       command, args = format_git_command last_git_command
-      Nonono::Commands.send :delegator, command, args
+      undo_command = Nonono::Commands.send :delegator, command, args
+
+      # harmless commands so nothing to undo
+      return if undo_command.nil?
+
+      puts "Run#{should_undo ? "ning" : ""} #{undo_command} to undo..."
+      Kernel.exec undo_command if should_undo
     end
 
     def in_git_directory
-      # TODO how well does this work?
       `git rev-parse --is-inside-work-tree` rescue false
     end
 
@@ -46,10 +52,11 @@ module Nonono
 
     def read_history
       path = File.expand_path('~/.zsh_history')
+      # TODO regex for any shell history file
+      # /(bash|zsh)/ and test against shell version
 
       if File.exists?(path)
         File.open(path) do |file|
-          # 30 is arbirtrary here
           return file.tail(30)
         end
       end

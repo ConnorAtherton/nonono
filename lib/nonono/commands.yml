@@ -1,2 +1,29 @@
+harmless: "Your last command didn't affect the repo at all, "
+
 help:
-  message: "Git help just shows you git commands, nothing to worry about :)"
+  message: "git help just shows you git commands, nothing to worry about :)"
+status:
+  message: "git status just shows you the working tree status. Basically, all the changes you made to the repo after you last committed."
+log:
+  message: "git status lists the commit logs for the repo."
+diff:
+  message: "git diff shows any changes between two different versions of the repo."
+show:
+  message: "git show displays information about objects in the repo such as specific commits, tags and file blobs."
+ls_tree:
+  message: "git ls-tree lists the contents of a tree object in the repo."
+cat_file:
+  message: "git cat-file pretty-prints the object given to it from the repos object database."
+grep:
+  message: "git grep searches and prints lines in the repo that match a certain pattern."
+
+add:
+  message: "You added some files to the index."
+branch:
+  message: "You were executing operations on git branches."
+  list:
+    message: "Don't worry, you just listed out all existing branches."
+  delete:
+    message: "You deleted your branch {{1}}. You will need to create it again using git branch or fetch it from the remote using git fetch {{1}}."
+  create:
+    message: "You created a new git branch {{1}}"
