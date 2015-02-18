@@ -27,3 +27,11 @@ branch:
     message: "You deleted your branch {{1}}. You will need to create it again using git branch or fetch it from the remote using git fetch {{1}}."
   create:
     message: "You created a new git branch {{1}}"
+mv:
+  message: "Moves or renames a file, directory or symlink."
+reset:
+  message: "Resets the repo HEAD back to a specified state"
+init:
+  message: "You created a brand spanking new git repository"
+revert:
+  message: "Creates a new commit undoing all the changes the specified commit passed to the command first did."

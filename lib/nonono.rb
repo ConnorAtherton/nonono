@@ -4,8 +4,6 @@ require "nonono/commands"
 require "pry"
 
 module Nonono
-  attr_accessor :commands
-
   class << self
     def find should_undo
       put "Not a git dir" unless in_git_directory
@@ -18,10 +16,17 @@ module Nonono
       end
 
       command, args = format_git_command last_git_command
-      undo_command = Nonono::Commands.send :delegator, command, args
+      undo_command, no_run = Nonono::Commands.send :delegator, command, args
 
       # harmless commands so nothing to undo
       return if undo_command.nil?
+
+      # means the revert commnd is dangerous and we shouldn't
+      # run it automatically
+      if no_run
+        puts "I can't run this automatically because it is dangerous. Here is my best guess.."
+        undo_command = false
+      end
 
       puts "Run#{should_undo ? "ning" : ""} #{undo_command} to undo..."
       Kernel.exec undo_command if should_undo
@@ -32,7 +37,7 @@ module Nonono
     end
 
     def is_git_command? command
-      /\s*git\s+[\w\s\S]+/ =~ command
+      !!(/\s*git\s+[\w\s\S]+/ =~ command)
     end
 
     def format_git_command command

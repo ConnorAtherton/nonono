@@ -40,8 +40,8 @@ module Nonono
         return puts commands['branch']['list']['message'] if args.nil?
 
         # rename branch with -m
-        unless (/\s*-m\s+/ =~ args).nil?
-          old, new = args.gsub(/\s*-m\s+/, "").split(" ")
+        unless (/\s*-(m|-move)\s+/ =~ args).nil?
+          old, new = args.gsub(/\s*-(m|-move)\s+/, "").split(" ")
           return "git branch -m #{new} #{old}"
         end
 
@@ -80,7 +80,7 @@ module Nonono
       end
 
       def init args
-
+        "rm -rf .git"
       end
 
       def merge args
@@ -88,7 +88,11 @@ module Nonono
       end
 
       def mv args
+        args.gsub(/-[a-zA-Z0-9]/, "").strip
 
+        # TODO have maliformed git command error
+        old, new = args.split
+        "git mv #{new} #{old}" if old && new
       end
 
       def pull args
@@ -104,7 +108,14 @@ module Nonono
       end
 
       def reset args
+        # TODO
+        # could we probe back in the history a little longer
+        # to give a better answer here. Won't work on rebase etc
+        ["git reset HEAD@{1}", true]
+      end
 
+      def revert args
+        "git reset --hard HEAD^1"
       end
 
       def rm args
@@ -112,6 +123,10 @@ module Nonono
       end
 
       def tag args
+
+      end
+
+      def archive args
 
       end
 
