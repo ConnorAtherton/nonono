@@ -24,7 +24,7 @@ module Nonono
         # end
 
         print commands["harmless"] if is_harmless
-        puts commands[cmd]["message"]
+        puts commands[cmd].is_a?(Hash) ? commands[cmd]["message"] : commands[cmd]
         send cmd, args if self.respond_to? cmd.to_sym
       end
 
@@ -37,7 +37,7 @@ module Nonono
       def branch args
         # lists branches
         # TODO distinguish between remotes and local branches
-        return puts commands['branch']['list']['message'] if args.nil?
+        return puts commands['branch']['list'] if args.nil?
 
         # rename branch with -m
         unless (/\s*-(m|-move)\s+/ =~ args).nil?
@@ -49,13 +49,13 @@ module Nonono
         # TODO need to interpolate strings in .yml file to pass in vars
         unless (/\s*(d|D)\s+/ =~ args).nil?
           branch = args.gsub(/\s*(d|D)\s+/, "").strip
-          interpolate(commands['branch']['delete']['message'], branch)
+          interpolate(commands['branch']['delete'], branch)
           return
         end
 
         # created a new branch
         if !!(/^[A-Za-z0-9]+([:-]*[A-Za-z0-9]+)*$/ =~ args)
-          interpolate(commands['branch']['create']['message'], args)
+          interpolate(commands['branch']['create'], args)
           return "git branch -D #{args}"
         end
 
@@ -67,12 +67,20 @@ module Nonono
 
       end
 
+      # todo this doesn't support options right now
+      # needs a way to do args parsing
       def clone args
+        args.split!
+        # git clone [opts] [repo] [dir]
+        # raise InvalidArguments error unless args.split.length > 1
+        humanized_name = /[a-zA-Z1-9]+.git/.match args[0]
+        name = args[1] unless args[1].nil?
 
+        ["rm -rf #{name || humanized_name}", true]
       end
 
       def commit args
-
+        "git reset --soft HEAD~1"
       end
 
       def fetch args
@@ -123,7 +131,21 @@ module Nonono
       end
 
       def tag args
+        # listing tags..
+        if args.nil?
+          puts commands["harmless"] + commands["tag"]["list"]
+          return nil
+        end
 
+        # added a tag
+        add_or_delete = '-d' if (tag_name = /-a\s+([a-zA-Z0.9]+)/.match args)
+
+        # deleted a tag
+        if add_or_delete.nil? && (tag_name = /-d\s+([a-zA-Z0.9]+)/.match args)
+          add_or_delete = '-a'
+        end
+
+        "git tag #{add_or_delete} #{tag_name[1]}"
       end
 
       def archive args
