@@ -4,9 +4,9 @@ class File
   def tail(n)
     return [] if n < 1
 
-    seek -TAIL_BUF_LENGTH, SEEK_END
+    seek(-TAIL_BUF_LENGTH, SEEK_END)
 
-    buf = ""
+    buf = ''
     while buf.count("\n") <= n
       buf = read(TAIL_BUF_LENGTH) + buf
       seek 2 * -TAIL_BUF_LENGTH, SEEK_CUR

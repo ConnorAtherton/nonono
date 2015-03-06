@@ -1,5 +1,5 @@
-require "yaml"
-require "pry"
+require 'yaml'
+require 'pry'
 
 module Nonono
   class Commands
@@ -12,23 +12,22 @@ module Nonono
     DOOM_COMMANDS = []
 
     class << self
-
       # Prints the message specified and gives control
       # to a specific method for that command
-      def delegator cmd, args
+      def delegator(cmd, args)
         is_harmless = HARMLESS_COMMANDS.include? cmd.to_sym
-        # TODO check if run with --dry-run here and print message
+        # TODO: check if run with --dry-run here and print message
         # saying the last command had no effect
         # if /--dry-run/ ~= args
 
         # end
 
-        print commands["harmless"] if is_harmless
-        puts commands[cmd].is_a?(Hash) ? commands[cmd]["message"] : commands[cmd]
+        print commands['harmless'] if is_harmless
+        puts commands[cmd].is_a?(Hash) ? commands[cmd]['message'] : commands[cmd]
         send cmd, args if self.respond_to? cmd.to_sym
       end
 
-      def add args
+      def add(args)
         return "git reset" unless (/(^.$|.\s+|--all|\*)/ =~ args).nil?
 
         "git reset #{args}"
@@ -36,7 +35,7 @@ module Nonono
 
       def branch args
         # lists branches
-        # TODO distinguish between remotes and local branches
+        # TODO: distinguish between remotes and local branches
         return puts commands['branch']['list'] if args.nil?
 
         # rename branch with -m
@@ -46,7 +45,7 @@ module Nonono
         end
 
         # deleted branch
-        # TODO need to interpolate strings in .yml file to pass in vars
+        # TODO: need to interpolate strings in .yml file to pass in vars
         unless (/\s*(d|D)\s+/ =~ args).nil?
           branch = args.gsub(/\s*(d|D)\s+/, "").strip
           interpolate(commands['branch']['delete'], branch)
@@ -80,25 +79,26 @@ module Nonono
       end
 
       def commit args
-        "git reset --soft HEAD~1"
+        'git reset --soft HEAD~1'
       end
 
       def fetch args
-
+        # http://stackoverflow.com/questions/15254480/reverse-a-git-fetch
+        ['git update-ref refs/remotes/origin/master refs/remotes/origin/master@{1}', true]
       end
 
-      def init args
-        "rm -rf .git"
+      def init _args
+        'rm -rf .git'
       end
 
       def merge args
 
       end
 
-      def mv args
-        args.gsub(/-[a-zA-Z0-9]/, "").strip
+      def mv(args)
+        args.gsub(/-[a-zA-Z0-9]/, '').strip
 
-        # TODO have maliformed git command error
+        # TODO: have maliformed git command error
         old, new = args.split
         "git mv #{new} #{old}" if old && new
       end
@@ -108,6 +108,7 @@ module Nonono
       end
 
       def push args
+        message = "You just pushed your #{branch} branch the #{remote} remote."
 
       end
 
@@ -119,11 +120,11 @@ module Nonono
         # TODO
         # could we probe back in the history a little longer
         # to give a better answer here. Won't work on rebase etc
-        ["git reset HEAD@{1}", true]
+        ['git reset HEAD@{1}', true]
       end
 
       def revert args
-        "git reset --hard HEAD^1"
+        'git reset --hard HEAD^1'
       end
 
       def rm args
@@ -133,7 +134,7 @@ module Nonono
       def tag args
         # listing tags..
         if args.nil?
-          puts commands["harmless"] + commands["tag"]["list"]
+          puts commands['harmless'] + commands['tag']['list']
           return nil
         end
 
@@ -148,17 +149,17 @@ module Nonono
         "git tag #{add_or_delete} #{tag_name[1]}"
       end
 
-      def archive args
-
+      def archive(args)
       end
 
       private
 
       def commands
-        @commands ||= YAML.load(File.open(File.expand_path(File.join(__FILE__, '..', 'commands.yml'))))
+        file = File.open(File.expand_path(File.join(__FILE__, '..', 'commands.yml')))
+        @commands ||= YAML.load(file)
       end
 
-      def interpolate string, *args
+      def interpolate(string, *args)
         args.each_with_index do |arg, i|
           string.gsub! "{{#{i + 1}}}", arg
         end
