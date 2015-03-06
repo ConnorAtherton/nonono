@@ -28,12 +28,12 @@ module Nonono
       end
 
       def add(args)
-        return "git reset" unless (/(^.$|.\s+|--all|\*)/ =~ args).nil?
+        return 'git reset' unless (/(^.$|.\s+|--all|\*)/ =~ args).nil?
 
         "git reset #{args}"
       end
 
-      def branch args
+      def branch(args)
         # lists branches
         # TODO: distinguish between remotes and local branches
         return puts commands['branch']['list'] if args.nil?
@@ -62,13 +62,13 @@ module Nonono
         # todo
       end
 
-      def checkout args
-
+      def checkout(args)
+        'git checkout -'
       end
 
-      # todo this doesn't support options right now
+      # TODO: this doesn't support options right now
       # needs a way to do args parsing
-      def clone args
+      def clone(args)
         args.split!
         # git clone [opts] [repo] [dir]
         # raise InvalidArguments error unless args.split.length > 1
@@ -87,12 +87,11 @@ module Nonono
         ['git update-ref refs/remotes/origin/master refs/remotes/origin/master@{1}', true]
       end
 
-      def init _args
+      def init(_)
         'rm -rf .git'
       end
 
       def merge args
-
       end
 
       def mv(args)
@@ -100,38 +99,45 @@ module Nonono
 
         # TODO: have maliformed git command error
         old, new = args.split
+        # raise MalformedCommandError unless old && new
         "git mv #{new} #{old}" if old && new
       end
 
-      def pull args
-
+      def pull(_)
       end
 
-      def push args
-        message = "You just pushed your #{branch} branch the #{remote} remote."
+      def push(args)
+        args = args.split(' ')
 
+        if args.count == 1
+          branch = args.first
+        elsif args.count == 2
+          remote, branch = args
+        else
+          # TODO: throw malformed command error
+        end
+
+        "You just pushed your #{branch} branch the #{remote} remote."
       end
 
-      def rebase args
-
+      def rebase(_)
       end
 
-      def reset args
+      def reset(_)
         # TODO
         # could we probe back in the history a little longer
         # to give a better answer here. Won't work on rebase etc
         ['git reset HEAD@{1}', true]
       end
 
-      def revert args
+      def revert(_)
         'git reset --hard HEAD^1'
       end
 
-      def rm args
-
+      def rm(_)
       end
 
-      def tag args
+      def tag(args)
         # listing tags..
         if args.nil?
           puts commands['harmless'] + commands['tag']['list']
@@ -149,7 +155,10 @@ module Nonono
         "git tag #{add_or_delete} #{tag_name[1]}"
       end
 
-      def archive(args)
+      def archive(_)
+      end
+
+      def remote(_)
       end
 
       private
