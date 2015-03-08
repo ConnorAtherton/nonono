@@ -14,7 +14,7 @@ module Nonono
     class << self
       # Prints the message specified and gives control
       # to a specific method for that command
-      def delegator(cmd, args)
+      def delegator(cmd, args, should_undo = nil)
         is_harmless = HARMLESS_COMMANDS.include? cmd.to_sym
         # TODO: check if run with --dry-run here and print message
         # saying the last command had no effect
@@ -22,8 +22,11 @@ module Nonono
 
         # end
 
-        print commands['harmless'] if is_harmless
-        puts commands[cmd].is_a?(Hash) ? commands[cmd]['message'] : commands[cmd]
+        unless should_undo
+          print commands['harmless'] if is_harmless
+          puts commands[cmd].is_a?(Hash) ? commands[cmd]['message'] : commands[cmd]
+        end
+
         send cmd, args if self.respond_to? cmd.to_sym
       end
 
@@ -131,6 +134,7 @@ module Nonono
       end
 
       def revert(_)
+        # TODO: should we just do another revert here?
         'git reset --hard HEAD^1'
       end
 
@@ -155,7 +159,15 @@ module Nonono
         "git tag #{add_or_delete} #{tag_name[1]}"
       end
 
-      def archive(_)
+      def archive(args)
+        # Assume we are piping into something
+        args = args.split ' '
+        # TODO: seriously need a ruby arg parser for this
+        branch_name, _op, archive_name = args
+        # TODO: malformed git command error
+        # return nil if!(branch && archive_name
+        interpolate(commands['archive']['notification'], branch_name)
+        "rm #{archive_name}"
       end
 
       def remote(_)

@@ -22,6 +22,9 @@ fetch: "You just updated all your local remote-tracking branches. I'm going to u
 revert: "Creates a new commit undoing all the changes the specified commit passed to the command first did."
 checkout: "You checked out a branch or some paths to the working tree.\nIf you staged some files then checked them out your changes are lost, unless you stashed them.\nIf you checked out a branch then you can return to the old one"
 push: "Transfers all local changes to a remote repository"
+archive:
+  message: "Creates an archive of files in a specified format"
+  notification: "You archived the {{1}} branch."
 tag:
   message: "Adds or deletes tags to the repo"
   list: "git tag just lists all current tags"
