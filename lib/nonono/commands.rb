@@ -41,6 +41,8 @@ module Nonono
         # TODO: distinguish between remotes and local branches
         return puts commands['branch']['list'] if args.nil?
 
+        # TODO: -r list remote and -a lists all branches
+
         # rename branch with -m
         unless (/\s*-(m|-move)\s+/ =~ args).nil?
           old, new = args.gsub(/\s*-(m|-move)\s+/, "").split(" ")

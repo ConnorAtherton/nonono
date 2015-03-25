@@ -56,16 +56,18 @@ module Nonono
     end
 
     def read_history
-      path = File.expand_path('~/.zsh_history')
-      # TODO: regex for any shell history file
-      # /(bash|zsh)/ and test against shell version
+      return unless File.exist?(history_file)
 
-      return unless File.exist?(path)
-
-      File.open(path) do |file|
+      File.open(history_file) do |file|
         return file.tail(30)
       end
     end
+
+    def history_file
+      # TODO: regex for any shell history file
+      # /(bash|zsh)/ and test against shell version
+      # TODO: instead of hardcoding
+      @path ||= File.expand_path('~/.zsh_history')
+    end
   end
 end
-
