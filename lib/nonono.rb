@@ -16,7 +16,7 @@ module Nonono
       end
 
       command, args = format_git_command last_git_command
-      undo_command, no_run = Nonono::Commands.send :delegator, command, args, should_undo
+      undo_command, no_run = Nonono::Commands.delegator command, args, should_undo
 
       # harmless commands so nothing to undo
       return if undo_command.nil?

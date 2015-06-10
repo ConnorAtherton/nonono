@@ -1,5 +1,6 @@
-require 'pry'
 require 'nonono'
+require 'minimist'
+require 'pry'
 
 module Nonono
   module CLI
@@ -7,12 +8,9 @@ module Nonono
 
     class << self
       def start(argv)
-        should_undo = wants_to_undo? argv
-        Nonono.find should_undo
-      end
-
-      def wants_to_undo?(argv)
-        argv.first =~ /(undo|u)/
+        args = Minimist.parse argv
+        binding.pry
+        Nonono.find !!args[:undo]
       end
     end
   end
