@@ -9,7 +9,6 @@ module Nonono
     class << self
       def start(argv)
         args = Minimist.parse argv
-        binding.pry
         Nonono.find !!args[:undo]
       end
     end

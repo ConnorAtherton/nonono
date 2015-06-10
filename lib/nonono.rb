@@ -6,7 +6,7 @@ require 'pry'
 module Nonono
   class << self
     def find(should_undo)
-      put 'Not a git dir' unless in_git_directory
+      put 'Not a git dir' unless in_git_directory?
       past_commands = read_history.map { |cmd| cmd.sub(/:\s+\d+:\d+;/, '') }
       last_git_command = past_commands.reverse.find { |cmd| git_command? cmd }
 
@@ -15,8 +15,8 @@ module Nonono
         return
       end
 
-      command, args = format_git_command last_git_command
-      undo_command, no_run = Nonono::Commands.delegator command, args, should_undo
+      args = format_git_command last_git_command
+      undo_command, no_run = Nonono::Commands.delegator(args[:commands].shift, args, should_undo)
 
       # harmless commands so nothing to undo
       return if undo_command.nil?
@@ -32,7 +32,7 @@ module Nonono
       Kernel.exec undo_command if should_undo
     end
 
-    def in_git_directory
+    def in_git_directory?
       `git rev-parse --is-inside-work-tree` rescue false
     end
 
@@ -41,18 +41,9 @@ module Nonono
     end
 
     def format_git_command(command)
-      split = command.split ' '
-      # assuming simple git commands for now
-      #  git show
-      #  git add
-      #  git remote etc
-      command = split.slice! 0, 2
-
-      # replace spaces and hashed with underscores
-      command = command[1].gsub(/-/, '_')
-      args = split.empty? ? nil : split.join(' ')
-
-      [command, args]
+      # remove the git command
+      split = command.split(' ').drop(1)
+      Minimist.parse(split)
     end
 
     def read_history

@@ -16,9 +16,13 @@ module Nonono
       # to a specific method for that command
       def delegator(cmd, args, should_undo = nil)
         is_harmless = HARMLESS_COMMANDS.include? cmd.to_sym
+
+        @commands = args[:commands]
+        @options = args[:options]
+
         # TODO: check if run with --dry-run here and print message
         # saying the last command had no effect
-        # if /--dry-run/ ~= args
+        # if args[:options][:dry_run]
 
         # end
 
@@ -27,7 +31,7 @@ module Nonono
           puts commands[cmd].is_a?(Hash) ? commands[cmd]['message'] : commands[cmd]
         end
 
-        send cmd, args if self.respond_to? cmd.to_sym
+        send(cmd, args) if self.respond_to? cmd.to_sym
       end
 
       def add(args)
