@@ -71,7 +71,7 @@ module Nonono
         # todo
       end
 
-      def checkout(args)
+      def checkout(_)
         'git checkout -'
       end
 
@@ -87,11 +87,11 @@ module Nonono
         ["rm -rf #{name || humanized_name}", true]
       end
 
-      def commit args
+      def commit(_)
         'git reset --soft HEAD~1'
       end
 
-      def fetch args
+      def fetch(_)
         # http://stackoverflow.com/questions/15254480/reverse-a-git-fetch
         ['git update-ref refs/remotes/origin/master refs/remotes/origin/master@{1}', true]
       end
@@ -100,7 +100,7 @@ module Nonono
         'rm -rf .git'
       end
 
-      def merge args
+      def merge(args)
       end
 
       def mv(args)
@@ -155,9 +155,11 @@ module Nonono
         end
 
         # added a tag
+        # add_or_delete = '-d' if (args[:options][:a] && ([a-zA-Z0.9]+)/.match args[:commands].unshift)
         add_or_delete = '-d' if (tag_name = /-a\s+([a-zA-Z0.9]+)/.match args)
 
         # deleted a tag
+        # if add_or_delete.nil? && (tag_name = /-d\s+([a-zA-Z0.9]+)/.match args)
         if add_or_delete.nil? && (tag_name = /-d\s+([a-zA-Z0.9]+)/.match args)
           add_or_delete = '-a'
         end
@@ -171,7 +173,7 @@ module Nonono
         # TODO: seriously need a ruby arg parser for this
         branch_name, _op, archive_name = args
         # TODO: malformed git command error
-        # return nil if!(branch && archive_name
+        # return nil unless branch && archive_name
         interpolate(commands['archive']['notification'], branch_name)
         "rm #{archive_name}"
       end

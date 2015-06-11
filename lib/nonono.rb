@@ -6,7 +6,7 @@ require 'pry'
 module Nonono
   class << self
     def find(should_undo)
-      put 'Not a git dir' unless in_git_directory?
+      put 'You are not inside a git directory' unless in_git_directory?
       past_commands = read_history.map { |cmd| cmd.sub(/:\s+\d+:\d+;/, '') }
       last_git_command = past_commands.reverse.find { |cmd| git_command? cmd }
 
@@ -47,7 +47,7 @@ module Nonono
     end
 
     def read_history
-      return unless File.exist?(history_file)
+      return if history_file.nil?
 
       File.open(history_file) do |file|
         return file.tail(30)
@@ -55,10 +55,11 @@ module Nonono
     end
 
     def history_file
-      # TODO: regex for any shell history file
-      # /(bash|zsh)/ and test against shell version
-      # TODO: instead of hardcoding
-      @path ||= File.expand_path('~/.zsh_history')
+      # TODO can we run the history command instead of this
+      @history_file ||= %w( zsh bash ).each do |sh|
+        path = File.expand_path("~/.#{sh}_history")
+        return path if File.exist?(path)
+      end
     end
   end
 end
