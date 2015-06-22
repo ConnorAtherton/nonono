@@ -1,5 +1,5 @@
 require 'yaml'
-require 'pry'
+# require 'pry'
 
 module Nonono
   class Commands

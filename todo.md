@@ -1,8 +1,7 @@
 #TODOS
 
 ##lib/nonono.rb
--: regex for any shell history file
--: instead of hardcoding
+- can we run the history command instead of this
 
 ##lib/nonono/commands.rb
 -: check if run with --dry-run here and print message

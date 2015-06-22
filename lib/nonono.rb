@@ -1,7 +1,7 @@
 require 'nonono/version'
 require 'nonono/file'
 require 'nonono/commands'
-require 'pry'
+# require 'pry'
 
 module Nonono
   class << self
