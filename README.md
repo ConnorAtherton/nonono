@@ -30,7 +30,12 @@ to run without knowing extra information.
 which project. In most cases I anticipate nonono will be called during
 that 'oh shit' moment right after issuing a dubious git command so th.
 
+## Running tests
+
+`bundle exec parallel_rspec spec/`
+
 ## Contributing
+
 
 ### Licence
 
