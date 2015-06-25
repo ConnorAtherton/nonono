@@ -2,6 +2,7 @@ $:.unshift File.dirname(__FILE__) + '/../lib'
 
 require 'nonono'
 require 'helpers'
+require 'fileutils'
 
 # Some thoughts
 #
@@ -16,4 +17,19 @@ require 'helpers'
 
 RSpec.configure do |config|
   config.include Helpers
+
+  config.after :all do
+    Dir[test_repos_path + '/*_repo'].each { |f| FileUtils.rm_rf f }
+  end
+
+  private
+
+  def test_repos_path
+    File.expand_path('fixtures', File.dirname(__FILE__))
+  end
+
+  def mock_history(cmd)
+    history_file = File.expand_path('fixtures/mock_history', File.dirname(__FILE__))
+    File.open(history_file, 'a') { |f| f << ": 1435210072:0;#{cmd}\n" }
+  end
 end

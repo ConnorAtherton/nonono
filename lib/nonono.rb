@@ -1,7 +1,6 @@
 require 'nonono/version'
 require 'nonono/file'
 require 'nonono/commands'
-# require 'pry'
 
 module Nonono
   class << self
@@ -55,7 +54,13 @@ module Nonono
     end
 
     def history_file
-      # TODO can we run the history command instead of this
+      if ENV['TEST']
+        return File.expand_path(
+          '../spec/fixtures/mock_history',
+          File.dirname(__FILE__)
+        )
+      end
+
       @history_file ||= %w( zsh bash ).each do |sh|
         path = File.expand_path("~/.#{sh}_history")
         return path if File.exist?(path)

@@ -1,10 +1,10 @@
-require "./lib/nonono/version"
+require './lib/nonono/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "nonono"
   gem.authors       = ["Connor Atherton"]
   gem.email         = "c.liam.atherton@gmail.com"
-  gem.summary       = "Handy git undo advice."
+  gem.summary       = "A CLI for undoing git actions."
   gem.description   = "A CLI for undoing git actions."
   gem.homepage      = "http://github.com/ConnorAtherton/nonono"
   gem.license       = "MIT"
@@ -22,10 +22,11 @@ Gem::Specification.new do |gem|
   gem.platform      = Gem::Platform::RUBY
   gem.require_paths = ["lib"]
 
-  gem.add_development_dependency "bundler", "~> 1.7"
-  gem.add_development_dependency "rake", "~> 10.0"
-  gem.add_development_dependency "rspec", "~> 2.14"
-  gem.add_development_dependency "parallel_tests"
-  # gem.add_development_dependency "pry", "~> 2.14"
-  gem.add_dependency "minimist", "~> 0.5.0"
+  gem.add_development_dependency 'bundler', '~> 1.7'
+  gem.add_development_dependency 'rake', '~> 10.0'
+  gem.add_development_dependency 'rspec', '~> 2.14'
+  gem.add_development_dependency 'parallel_tests'
+  # gem.add_development_dependency 'pry', '~> 2.14'
+
+  gem.add_dependency 'minimist', '~> 0.6.0'
 end
